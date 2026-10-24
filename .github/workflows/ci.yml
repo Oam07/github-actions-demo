@@ -18,8 +18,8 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install scanning tool
-        run: pip install ruff
+      - name: Install scanning and testing tools
+        run: python -m pip install ruff pytest pytest-cov
 
       - name: Scan Python code
         run: ruff check .
