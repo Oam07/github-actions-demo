@@ -23,7 +23,10 @@ jobs:
 
       - name: Scan Python code
         run: ruff check .
-
+        
+      - name: Run tests and generate coverage
+        run: pytest --cov=app --cov-report=term --cov-report=xml:coverage.xml
+  
   build:
     name: Build Application
     runs-on: ubuntu-latest
