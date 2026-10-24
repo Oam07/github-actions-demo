@@ -1,1 +1,65 @@
+name: Demo CI Pipeline
 
+on:
+  push:
+  pull_request:
+
+jobs:
+  scan:
+    name: Scan Code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install scanning tool
+        run: pip install ruff
+
+      - name: Scan Python code
+        run: ruff check .
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: scan
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build validation
+        run: python -m compileall -q app.py test_app.py
+
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Execute tests
+        run: pytest -v
